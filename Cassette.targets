@@ -43,6 +43,8 @@ Func<XmlDocument, string, XmlDocument> transformer = (source, transform) =>
   if (transformation == null)
       throw new Exception("Could not create instance of XmlTransformation");
 
+  Log.LogMessage(MessageImportance.Low, "Transforming " + source);
+  
   transformation.Apply(source);
 
   return source;
