@@ -36,14 +36,14 @@ Assembly taskAssembly = Assembly.UnsafeLoadFrom(taskPath);
 
 Func<XmlDocument, string, XmlDocument> transformer = (source, transform) => 
 {
+  Log.LogMessage(MessageImportance.Low, "Transforming with " + transform);
+
   dynamic transformation = taskAssembly.CreateInstance(
     "Microsoft.Web.Publishing.Tasks.XmlTransformation", true, BindingFlags.CreateInstance, 
     null, new object[] { transform }, null, null);
   
   if (transformation == null)
       throw new Exception("Could not create instance of XmlTransformation");
-
-  Log.LogMessage(MessageImportance.Low, "Transforming " + source);
   
   transformation.Apply(source);
 
@@ -86,6 +86,8 @@ do {
 
 // Reverse chain
 sources.Reverse();
+
+Log.LogMessage(MessageImportance.Low, "Start transform for " + Destination);
 
 var transformedDoc = sources.Skip(1).Aggregate(rootDoc, 
     (document, transform) => String.IsNullOrEmpty(transform) 
