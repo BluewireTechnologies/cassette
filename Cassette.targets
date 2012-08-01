@@ -45,7 +45,15 @@ Func<XmlDocument, string, XmlDocument> transformer = (source, transform) =>
   if (transformation == null)
       throw new Exception("Could not create instance of XmlTransformation");
   
-  transformation.Apply(source);
+  try
+  {
+    transformation.Apply(source);
+  }
+  catch
+  {
+    Log.LogMessage(MessageImportance.Low, "Failed to apply transformation to\n" + source.OuterXml);
+    throw;
+  }
 
   return source;
 };
@@ -75,12 +83,16 @@ if (basePath == null) {
 do {
     sources.Add(parent);
 
-    rootDoc.Load(Path.Combine(basePath, parent));
+    var pathToLoad = Path.Combine(basePath, parent);
+    Log.LogMessage(MessageImportance.Low, "Loading " + pathToLoad + " into rootDoc");
+    rootDoc.Load(pathToLoad);
 
     parent = getParent(rootDoc);
     
     if (parent != null) {
-        rootDoc.Load(Path.Combine(basePath, parent));
+        pathToLoad = Path.Combine(basePath, parent);
+        Log.LogMessage(MessageImportance.Low, "Loading " + pathToLoad + " into rootDoc");
+        rootDoc.Load(pathToLoad);
     }
 } while (parent != null);
 
