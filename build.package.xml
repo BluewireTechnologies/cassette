@@ -38,13 +38,13 @@
   <Target Name="Test" DependsOnTargets="Build">
     <ItemGroup>
       <!-- Test .NET 4.0 Projects -->
-      <TestProject Include="src\Cassette.UnitTests\bin\Release\Cassette.UnitTests.dll"/>
-      <TestProject Include="src\*\bin\Release\Cassette.*.UnitTests.dll"/>
-      <TestProject Include="src\Cassette.IntegrationTests\bin\Release\Cassette.IntegrationTests.dll"/>
+      <TestProject Include="src\Cassette.UnitTests\bin\Release\NET40\Cassette.UnitTests.dll"/>
+      <TestProject Include="src\*\bin\Release\NET40\Cassette.*.UnitTests.dll"/>
+      <TestProject Include="src\Cassette.IntegrationTests\bin\Release\NET40\Cassette.IntegrationTests.dll"/>
       <!-- Test .NET 3.5 Projects -->
-      <TestProject Include="src\Cassette.UnitTests\bin\ReleaseNET35\Cassette.UnitTests.dll"/>
-      <TestProject Include="src\*\bin\ReleaseNET35\Cassette.*.UnitTests.dll"/>
-      <TestProject Include="src\Cassette.IntegrationTests\bin\ReleaseNET35\Cassette.IntegrationTests.dll"/>
+      <TestProject Include="src\Cassette.UnitTests\bin\ReleaseNET35\NET35\Cassette.UnitTests.dll"/>
+      <TestProject Include="src\*\bin\ReleaseNET35\NET35\Cassette.*.UnitTests.dll"/>
+      <TestProject Include="src\Cassette.IntegrationTests\bin\ReleaseNET35\NET35\Cassette.IntegrationTests.dll"/>
     </ItemGroup>
     <Exec Command="tools\xunit.console.clr4.x86.exe %(TestProject.Identity)" />
   </Target>
@@ -53,7 +53,6 @@
   <Target Name="NugetPack" DependsOnTargets="Build">
     <ItemGroup>
       <Nutrans Include="**\*.nutrans" />
-      <Nuspec Include="**\*.nuspec" Exclude="src\Cassette.Shared.nuspec;src\packages\**\*.nuspec" />
     </ItemGroup>
     <!-- Get the package version from Cassette.dll's AssemblyInformationalVersion attribute. -->
     <GetAssemblyInformationalVersion Assembly="src\Cassette\bin\Release\NET40\Cassette.dll">
@@ -69,7 +68,11 @@
         Source="%(Nutrans.Identity)"
         Destination="%(Nutrans.RecursiveDir)%(Nutrans.Filename).nuspec"
         TaskPath="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v11.0\Web\Microsoft.Web.XmlTransform.dll"/>
-
+		
+	<ItemGroup>
+      <Nuspec Include="**\*.nuspec" Exclude="src\Cassette.Shared.nuspec;src\packages\**\*.nuspec" />
+    </ItemGroup>
+		
     <Exec Command="src\.nuget\nuget.exe pack %(Nuspec.Identity) -Symbols -Version $(Version) -OutputDirectory $(NugetOutputDir)"/>
   </Target>
 
