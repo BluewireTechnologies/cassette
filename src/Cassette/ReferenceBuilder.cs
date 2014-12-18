@@ -25,7 +25,7 @@ namespace Cassette
         readonly IPlaceholderTracker placeholderTracker;
         readonly IBundleFactoryProvider bundleFactoryProvider;
         readonly CassetteSettings settings;
-        readonly HashedSet<ReferencedBundle> referencedBundles = new HashedSet<ReferencedBundle>(); 
+        readonly OrderedDependencySet<ReferencedBundle> referencedBundles = new OrderedDependencySet<ReferencedBundle>(); 
         readonly HashedSet<string> renderedLocations = new HashedSet<string>();
  
         public void Reference<T>(string path, string location = null)
@@ -130,9 +130,9 @@ namespace Cassette
 
             foreach (var bundle in bundles)
             {
-                if (!referencedBundles.Add(new ReferencedBundle(bundle, location))) continue; // Already present. Dependencies should already be present too.
-
-                allBundles.CollectAllReferences(bundle, b => new ReferencedBundle(b), referencedBundles);
+                IOrderedDependencyReceiver<ReferencedBundle> receiver;
+                if (!referencedBundles.Add(new ReferencedBundle(bundle, location), out receiver)) continue; // Already present. Dependencies should already be present too.
+                allBundles.CollectAllReferences(bundle, b => new ReferencedBundle(b), receiver);
             }
         }
 
@@ -162,8 +162,7 @@ namespace Cassette
 
         public IEnumerable<Bundle> GetBundles(string location)
         {
-            var bundles = referencedBundles.Where(r => r.PageLocation == location).Select(r => r.Bundle).ToArray();
-            return allBundles.SortBundles(bundles);
+            return referencedBundles.Where(r => r.PageLocation == location).Select(r => r.Bundle).ToArray();
         }
 
         public string Render<T>(string location = null)
