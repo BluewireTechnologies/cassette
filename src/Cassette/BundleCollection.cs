@@ -721,7 +721,7 @@ namespace Cassette
             ).ToDictionary(x => x.bundle, x => x.references);
         }
 
-        IEnumerable<AssetReference> GetNonSameBundleAssetReferences(Bundle bundle)
+        static IEnumerable<AssetReference> GetNonSameBundleAssetReferences(Bundle bundle)
         {
             var collector = new BundleReferenceCollector(AssetReferenceType.DifferentBundle, AssetReferenceType.Url);
             bundle.Accept(collector);
@@ -746,16 +746,13 @@ namespace Cassette
             }
         }
 
-        internal IEnumerable<Bundle> FindAllReferences(Bundle bundle)
+        internal void CollectAllReferences<T>(Bundle bundle, Func<Bundle, T> map, HashedSet<T> set)
         {
             if (bundleImmediateReferences == null)
             {
-                throw new InvalidOperationException("BuildReferences must be called once before FindAllReferences can be called.");
+                throw new InvalidOperationException("BuildReferences must be called once before CollectAllReferences can be called.");
             }
-
-            var set = new HashedSet<Bundle>();
-            AddReferencedBundlesToSet(bundle, set);
-            return set;
+            AddReferencedBundlesToSet(bundle, map, set);
         }
 
         internal IEnumerable<Bundle> SortBundles(IEnumerable<Bundle> bundles)
@@ -801,14 +798,16 @@ namespace Cassette
             );
         }
 
-        void AddReferencedBundlesToSet(Bundle referencer, HashedSet<Bundle> all)
+        void AddReferencedBundlesToSet<T>(Bundle referencer, Func<Bundle, T> map, HashedSet<T> set)
         {
             HashedSet<Bundle> referencedBundles;
             if (!bundleImmediateReferences.TryGetValue(referencer, out referencedBundles)) return;
             foreach (var referencedBundle in referencedBundles)
             {
-                all.Add(referencedBundle);
-                AddReferencedBundlesToSet(referencedBundle, all);
+                var item = map(referencedBundle);
+                if (!set.Add(item)) continue;
+
+                AddReferencedBundlesToSet(referencedBundle, map, set);
             }
         }
 
@@ -835,10 +834,7 @@ namespace Cassette
 
         public bool Equals(IEnumerable<Bundle> otherBundles)
         {
-            return Enumerable.SequenceEqual(
-                OrderForEqualityComparison(bundles),
-                OrderForEqualityComparison(otherBundles)
-            );
+            return OrderForEqualityComparison(bundles).SequenceEqual(OrderForEqualityComparison(otherBundles));
         }
 
         static IEnumerable<Bundle> OrderForEqualityComparison(IEnumerable<Bundle> bundlesToOrder)

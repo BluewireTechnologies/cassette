@@ -130,16 +130,9 @@ namespace Cassette
 
             foreach (var bundle in bundles)
             {
-                referencedBundles.Add(new ReferencedBundle(bundle, location));
-            }
+                if (!referencedBundles.Add(new ReferencedBundle(bundle, location))) continue; // Already present. Dependencies should already be present too.
 
-            foreach (var bundle in bundles)
-            {
-                var references = allBundles.FindAllReferences(bundle);
-                foreach (var reference in references)
-                {
-                    referencedBundles.Add(new ReferencedBundle(reference));
-                }
+                allBundles.CollectAllReferences(bundle, b => new ReferencedBundle(b), referencedBundles);
             }
         }
 
