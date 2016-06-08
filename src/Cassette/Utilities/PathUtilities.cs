@@ -18,7 +18,7 @@ namespace Cassette.Utilities
     
         public static string CombineWithForwardSlashes(params string[] paths)
         {
-            return paths.Aggregate(Path.Combine).Replace('\\', '/');
+            return Combine(paths).Replace('\\', '/');
         }
 
         public static string NormalizePath(string path)
