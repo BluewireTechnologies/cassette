@@ -256,6 +256,7 @@ namespace Cassette
  
         public override bool Equals(object obj)
         {
+            if (ReferenceEquals(obj, this)) return true;
             var other = obj as Bundle;
             return other != null &&
                    TypesEqual(this, other) &&
