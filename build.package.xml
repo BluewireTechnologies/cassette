@@ -67,7 +67,7 @@
     <TransformXmlHierarchy
         Source="%(Nutrans.Identity)"
         Destination="%(Nutrans.RecursiveDir)%(Nutrans.Filename).nuspec"
-        TaskPath="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v11.0\Web\Microsoft.Web.XmlTransform.dll"/>
+        TaskPath="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v12.0\Web\Microsoft.Web.XmlTransform.dll"/>
 		
 	<ItemGroup>
       <Nuspec Include="**\*.nuspec" Exclude="src\Cassette.Shared.nuspec;src\packages\**\*.nuspec" />

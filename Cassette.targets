@@ -8,7 +8,7 @@
   <TransformXmlHierarchy 
     Source="some-source.xml" 
     Destination="transformed.xml"
-    TaskPath="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v11.0\Web\Microsoft.Web.XmlTransform.dll"/>
+    TaskPath="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v12.0\Web\Microsoft.Web.XmlTransform.dll"/>
   -->
   <UsingTask
     TaskName="TransformXmlHierarchy"
