@@ -261,6 +261,12 @@ namespace Cassette
                    AllAssetsEqual(this, other);
         }
 
+        public override int GetHashCode()
+        {
+            if (Path == null) return 0;
+            return StringComparer.OrdinalIgnoreCase.GetHashCode(Path);
+        }
+
         static bool TypesEqual(Bundle x, Bundle y)
         {
             return x.GetType() == y.GetType();
