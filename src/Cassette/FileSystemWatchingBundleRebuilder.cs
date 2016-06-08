@@ -140,7 +140,7 @@ namespace Cassette
             readOnlyBundlesLock.EnterReadLock();
             try
             {
-                var predicate = new BundleContainsPathPredicate(path) { AllowPartialAssetPaths = true };
+                var predicate = new BundleContainsPartialPathPredicate(path);
                 readOnlyBundles.Accept(predicate);
                 return predicate.Result;
             }

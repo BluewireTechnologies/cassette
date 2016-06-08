@@ -1,11 +1,12 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Cassette.Utilities;
 
 namespace Cassette
 {
-    class BundleContainsPathPredicate : IBundleVisitor
+    class BundleContainsPartialPathPredicate : IBundleVisitor
     {
-        public BundleContainsPathPredicate(string path)
+        public BundleContainsPartialPathPredicate(string path)
         {
             originalPath = path;
         }
@@ -33,10 +34,20 @@ namespace Cassette
         void IBundleVisitor.Visit(IAsset asset)
         {
             if (isFound) return;
-            if (IsMatch(asset.Path))
+            if (IsMatch(asset.Path) || IsPartialAssetPathMatch(asset.Path))
             {
                 isFound = true;
             }
+        }
+
+        /// <summary>
+        /// Looking for "~/bundle/sub" can match "~/bundle/sub/asset.js"
+        /// </summary>
+        bool IsPartialAssetPathMatch(string assetPath)
+        {
+            if (assetPath.Length < originalPath.Length) return false;
+
+            return assetPath.StartsWith(originalPath, StringComparison.OrdinalIgnoreCase);
         }
 
         string NormalizePath(string path, Bundle bundle)

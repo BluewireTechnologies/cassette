@@ -67,8 +67,9 @@ namespace Cassette.Utilities
             {
                 return false;
             }
-            var slashes = new[] {Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar};
-            return path1.Split(slashes).SequenceEqual(path2.Split(slashes), StringComparer.OrdinalIgnoreCase);
+            var normalisedPath1 = path1.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+            var normalisedPath2 = path2.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+            return StringComparer.OrdinalIgnoreCase.Equals(normalisedPath1, normalisedPath2);
         }
 
         public static string AppRelative(string path)
