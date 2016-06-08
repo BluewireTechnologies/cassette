@@ -15,6 +15,7 @@ namespace Cassette.IO
             this.name = name;
             this.directory = directory;
             this.systemAbsoluteFilename = systemAbsoluteFilename;
+            FullPath = PathUtilities.CombineWithForwardSlashes(directory.FullPath, name);
         }
 
         public IDirectory Directory
@@ -22,10 +23,7 @@ namespace Cassette.IO
             get { return directory; }
         }
 
-        public string FullPath
-        {
-            get { return PathUtilities.CombineWithForwardSlashes(directory.FullPath, name); }
-        }
+        public string FullPath { get; private set; }
 
         public Stream Open(FileMode mode, FileAccess access, FileShare fileShare)
         {
