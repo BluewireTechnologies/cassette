@@ -31,10 +31,8 @@ namespace Cassette.Spriting.Spritastic
                     Tracer.Trace("Finished adding {0}", imageUrl.ImageUrl);
                 }
                 var sprites = spriteManager.Flush();
-                var newCss = spriteManager.Aggregate(
-                    cssContent,
-                    (current, spritedImage) => spritedImage.InjectIntoCss(current)
-                );
+                var newCss = cssContent;
+                foreach (var image in spriteManager) newCss = image.InjectIntoCss(newCss);
                 return new SpritePackage(newCss, sprites, spriteManager.Errors);
             }
         }

@@ -46,7 +46,10 @@ namespace Cassette.HtmlTemplates
 
         string ApplyOperations(IAsset htmlTemplateAsset, IEnumerable<Func<string, string>> operations)
         {
-            return operations.Aggregate(htmlTemplateAsset.Path, (path, operation) => operation(path));
+            string result = htmlTemplateAsset.Path;
+            foreach (var operation in operations)
+                result = operation(result);
+            return result;
         }
 
         string RemoveBundlePath(string assetPath)
