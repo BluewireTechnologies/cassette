@@ -11,5 +11,9 @@ App_Bundles/
 src/**/*.nuspec
 *.dotCover
 *.orig
-src/packages
 cassette-cache
+src/.vs/
+src/Backup/
+src/UpgradeLog.htm
+
+
