@@ -256,11 +256,18 @@ namespace Cassette
  
         public override bool Equals(object obj)
         {
+            if (ReferenceEquals(obj, this)) return true;
             var other = obj as Bundle;
             return other != null &&
                    TypesEqual(this, other) &&
                    PathsEqual(this, other) &&
                    AllAssetsEqual(this, other);
+        }
+
+        public override int GetHashCode()
+        {
+            if (Path == null) return 0;
+            return StringComparer.OrdinalIgnoreCase.GetHashCode(Path);
         }
 
         static bool TypesEqual(Bundle x, Bundle y)

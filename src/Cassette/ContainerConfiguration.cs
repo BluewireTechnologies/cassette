@@ -96,10 +96,10 @@ namespace Cassette
         IBundlePipeline<T> ApplyBundlePipelineModifiers(IBundlePipeline<T> pipeline, TinyIoCContainer container)
         {
             var modifiers = container.ResolveAll<IBundlePipelineModifier<T>>();
-            return modifiers.Aggregate(
-                pipeline,
-                (currentPipeline, modifier) => modifier.Modify(currentPipeline)
-            );
+            IBundlePipeline<T> result = pipeline;
+            foreach (var modifier in modifiers)
+                result = modifier.Modify(result);
+            return result;
         }
     }
 }

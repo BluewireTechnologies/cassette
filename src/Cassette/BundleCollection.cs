@@ -19,7 +19,7 @@ namespace Cassette
 {
     public class BundleCollection : IEnumerable<Bundle>, IDisposable
     {
-        readonly List<Bundle> bundles = new List<Bundle>();
+        readonly HashSet<Bundle> bundles = new HashSet<Bundle>();
         readonly CassetteSettings settings;
         readonly IFileSearchProvider fileSearchProvider;
         readonly IBundleFactoryProvider bundleFactoryProvider; 
@@ -861,13 +861,9 @@ namespace Cassette
 
         public bool Equals(IEnumerable<Bundle> otherBundles)
         {
-            return OrderForEqualityComparison(bundles).SequenceEqual(OrderForEqualityComparison(otherBundles));
+            if (ReferenceEquals(otherBundles, this)) return true;
+            return bundles.SetEquals(otherBundles);
         }
-
-        static IEnumerable<Bundle> OrderForEqualityComparison(IEnumerable<Bundle> bundlesToOrder)
-        {
-            return bundlesToOrder.OrderBy(b => b.GetType().FullName).ThenBy(b => b.Path);
-        } 
 
         public IEnumerator<Bundle> GetEnumerator()
         {

@@ -17,7 +17,10 @@ namespace Cassette
 
         public string ReplacePlaceholders(string html)
         {
-            return creationFunctions.Aggregate(html, (current, item) => current.Replace(item.Key.ToString(), item.Value()));
+            string result = html;
+            foreach (var function in creationFunctions)
+                result = result.Replace(function.Key.ToString(), function.Value());
+            return result;
         }
     }
 }
