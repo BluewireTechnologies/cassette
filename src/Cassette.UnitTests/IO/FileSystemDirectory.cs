@@ -18,7 +18,7 @@ namespace Cassette.IO
                 var dir = new FileSystemDirectory(path);
                 var file = dir.GetFile("test.txt");
                 file.ShouldBeType<FileSystemFile>();
-                PathUtilities.PathsEqual(file.FullPath, "~/test.txt").ShouldBeTrue();
+                new CaseInsensitivePathEqualityComparer().Equals(file.FullPath, "~/test.txt").ShouldBeTrue();
             }
         }
 

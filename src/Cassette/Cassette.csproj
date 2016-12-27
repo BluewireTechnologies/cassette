@@ -93,7 +93,7 @@
     </Compile>
     <Compile Include="AssemblyScanner.cs" />
     <Compile Include="AssetCollection.cs" />
-    <Compile Include="AssetPathComparer.cs" />
+    <Compile Include="AssetIndex.cs" />
     <Compile Include="BundleCacheRebuilder.cs" />
     <Compile Include="BundleCollectionChangedEventArgs.cs" />
     <Compile Include="BundleContainsPartialPathPredicate.cs" />
@@ -177,7 +177,6 @@
     <Compile Include="LocalAssetSettings.cs" />
     <Compile Include="FileAsset.cs" />
     <Compile Include="AssetBase.cs" />
-    <Compile Include="AssetFinder.cs" />
     <Compile Include="BundleFactoryBase.cs" />
     <Compile Include="FileSearch.cs" />
     <Compile Include="CassetteSettings.cs" />

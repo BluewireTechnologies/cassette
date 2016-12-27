@@ -3,7 +3,7 @@ using Cassette.Utilities;
 
 namespace Cassette
 {
-    class BundleContainsPathPredicate : IBundleVisitor
+    class BundleContainsPathPredicate
     {
         public BundleContainsPathPredicate(string path)
         {
@@ -11,30 +11,13 @@ namespace Cassette
         }
 
         readonly string originalPath;
-        string normalizedPath;
-        bool isFound;
 
-        public bool Result => isFound;
-
-        bool IBundleVisitor.Visit(Bundle bundle)
+        public bool EvaluateFor(Bundle bundle)
         {
-            if (isFound) return false; // Shortcircuit; already found.
-            normalizedPath = originalPath.IsUrl() ? originalPath : NormalizePath(originalPath, bundle);
+            var normalizedPath = originalPath.IsUrl() ? originalPath : NormalizePath(originalPath, bundle);
 
-            if (IsMatch(bundle.Path))
-            {
-                isFound = true;
-            }
-            return true;
-        }
-
-        void IBundleVisitor.Visit(IAsset asset)
-        {
-            if (isFound) return;
-            if (IsMatch(asset.Path))
-            {
-                isFound = true;
-            }
+            if (new CaseInsensitivePathEqualityComparer().Equals(bundle.Path, normalizedPath)) return true;
+            return bundle.Assets.ContainsPath(normalizedPath);
         }
 
         string NormalizePath(string path, Bundle bundle)
@@ -48,11 +31,6 @@ namespace Cassette
             {
                 return PathUtilities.CombineWithForwardSlashes(bundle.Path, path);
             }
-        }
-
-        bool IsMatch(string path)
-        {
-            return PathUtilities.PathsEqual(path, normalizedPath);
         }
     }
 }
