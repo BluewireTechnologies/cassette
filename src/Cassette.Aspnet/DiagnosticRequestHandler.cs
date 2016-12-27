@@ -210,9 +210,10 @@ namespace Cassette.Aspnet
                 get { return assetLinks; }
             }
 
-            public void Visit(Bundle bundle)
+            public bool Visit(Bundle bundle)
             {
                 bundlePath = bundle.Path;
+                return true;
             }
 
             public void Visit(IAsset asset)

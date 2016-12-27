@@ -28,15 +28,17 @@ namespace Cassette.Caching
             return isValid;
         }
 
-        void IBundleVisitor.Visit(Bundle bundle)
+        bool IBundleVisitor.Visit(Bundle bundle)
         {
-            if (!bundle.IsFromDescriptorFile) return;
+            if (!bundle.IsFromDescriptorFile) return true;
 
             var descriptorFile = sourceDirectory.GetFile(bundle.DescriptorFilePath);
             if (!descriptorFile.Exists || descriptorFile.LastWriteTimeUtc > asOfDateTime)
             {
-                isValid = false;                    
+                isValid = false;
+                return false; // Once invalid detected there's no point checking the others.
             }
+            return true;
         }
 
         void IBundleVisitor.Visit(IAsset asset)

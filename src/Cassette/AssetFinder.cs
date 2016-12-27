@@ -13,9 +13,7 @@ namespace Cassette
 
         public IAsset FoundAsset { get; private set; }
 
-        public void Visit(Bundle bundle)
-        {
-        }
+        public bool Visit(Bundle bundle) => FoundAsset == null; // Shortcircuit; already found.
 
         public void Visit(IAsset asset)
         {

@@ -14,7 +14,7 @@ namespace Cassette
         }
 
         public bool Result { get; private set; }
-        public abstract void Visit(Bundle bundle);
+        public abstract bool Visit(Bundle bundle);
         public abstract void Visit(IAsset asset);
 
         class AbsolutePredicate : BundleContainsPartialPathPredicate
@@ -28,13 +28,14 @@ namespace Cassette
             readonly string originalPath;
             readonly string normalizedPath;
 
-            public override void Visit(Bundle bundle)
+            public override bool Visit(Bundle bundle)
             {
-                if (Result) return;
+                if (Result) return false; // Shortcircuit; already found.
                 if (IsMatch(bundle.Path))
                 {
                     Result = true;
                 }
+                return true;
             }
 
             public override void Visit(IAsset asset)
@@ -75,9 +76,9 @@ namespace Cassette
 
             readonly string originalPathWithoutTrailingSlashes;
 
-            public override void Visit(Bundle bundle)
+            public override bool Visit(Bundle bundle)
             {
-                if (Result) return;
+                if (Result) return true;
 
                 // Within this bundle, match assets according to this resolved path:
                 localPath = PathUtilities.CombineWithForwardSlashes(bundle.Path, originalPathWithoutTrailingSlashes);
@@ -86,6 +87,7 @@ namespace Cassette
                 {
                     Result = true;
                 }
+                return true;
             }
 
             public override void Visit(IAsset asset)

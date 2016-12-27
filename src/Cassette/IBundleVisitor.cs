@@ -1,11 +1,12 @@
 ﻿namespace Cassette
 {
     /// <summary>
-    /// A visitor that traverses a bundle and its assets.
+    /// A visitor that traverses a bundle and optionally its assets.
     /// </summary>
     public interface IBundleVisitor
     {
-        void Visit(Bundle bundle);
+        bool Visit(Bundle bundle);
+
         void Visit(IAsset asset);
     }
 }

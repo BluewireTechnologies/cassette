@@ -20,9 +20,10 @@ namespace Cassette
 
         public List<CollectedReference> CollectedReferences { get; private set; }
 
-        public void Visit(Bundle bundle)
+        public bool Visit(Bundle bundle)
         {
             currentBundle = bundle;
+            return true;
         }
 
         public void Visit(IAsset asset)

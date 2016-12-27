@@ -18,9 +18,7 @@ namespace Cassette.MSBuild
             urlGenerator = new UrlGenerator(new CombinePathWithUrl(outputDirectory), new FileSystemDirectory(absoluteSourceDirectory), "");
         }
 
-        public void Visit(Bundle bundle)
-        {
-        }
+        public bool Visit(Bundle bundle) => true;
 
         public void Visit(IAsset asset)
         {
