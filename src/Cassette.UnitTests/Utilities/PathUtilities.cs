@@ -84,31 +84,31 @@ namespace Cassette.Utilities
         [Fact]
         public void null_null_returns_true()
         {
-            PathUtilities.PathsEqual(null, null).ShouldBeTrue();
+            new CaseInsensitivePathEqualityComparer().Equals(null, null).ShouldBeTrue();
         }
 
         [Fact]
         public void null_string_returns_false()
         {
-            PathUtilities.PathsEqual(null, "").ShouldBeFalse();
+            new CaseInsensitivePathEqualityComparer().Equals(null, "").ShouldBeFalse();
         }
 
         [Fact]
         public void string_null_returns_false()
         {
-            PathUtilities.PathsEqual("", null).ShouldBeFalse();
+            new CaseInsensitivePathEqualityComparer().Equals("", null).ShouldBeFalse();
         }
 
         [Fact]
         public void  DifferentCasesStillEqual()
         {
-            PathUtilities.PathsEqual("A", "a").ShouldBeTrue();
+            new CaseInsensitivePathEqualityComparer().Equals("A", "a").ShouldBeTrue();
         }
 
         [Fact]
         public void DifferentSlashesStillEqual()
         {
-            PathUtilities.PathsEqual("test/foo", "test\\foo").ShouldBeTrue();
+            new CaseInsensitivePathEqualityComparer().Equals("test/foo", "test\\foo").ShouldBeTrue();
         }
     }
 }

@@ -57,11 +57,6 @@ namespace Cassette.Utilities
             }
         }
 
-        public static bool PathsEqual(string path1, string path2)
-        {
-            return new CaseInsensitivePathEqualityComparer().Equals(path1, path2);
-        }
-
         public static string AppRelative(string path)
         {
             if (path.IsUrl()) return path;

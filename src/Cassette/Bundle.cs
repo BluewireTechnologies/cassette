@@ -168,16 +168,12 @@ namespace Cassette
         internal virtual bool ContainsPath(string pathToFind)
         {
             var predicate = new BundleContainsPathPredicate(pathToFind);
-            Accept(predicate);
-            return predicate.Result;
+            return predicate.EvaluateFor(this);
         }
 
         internal IAsset FindAssetByPath(string pathToFind)
         {
-            //return assets.FirstOrDefault(asset => PathUtilities.PathsEqual(asset.Path, pathToFind));
-            var assetFinder = new AssetFinder(pathToFind);
-            Accept(assetFinder);
-            return assetFinder.FoundAsset;
+            return assets.FindByPath(pathToFind);
         }
 
         public void Accept(IBundleVisitor visitor)
@@ -285,9 +281,8 @@ namespace Cassette
             var collectorY = new CollectLeafAssets();
             y.Accept(collectorY);
 
-            var assetsX = collectorX.Assets.OrderBy(a => a.Path);
-            var assetsY = collectorY.Assets.OrderBy(a => a.Path);
-            return assetsX.SequenceEqual(assetsY, new AssetPathComparer());
+            var assetsX = new HashSet<string>(collectorX.Assets.Select(a => a.Path), StringComparer.Ordinal);
+            return assetsX.SetEquals(collectorY.Assets.Select(a => a.Path));
         }
 
         protected virtual void Dispose(bool disposing)
