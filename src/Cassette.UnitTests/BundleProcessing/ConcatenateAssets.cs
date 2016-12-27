@@ -33,11 +33,11 @@ namespace Cassette.BundleProcessing
             processor.Process(bundle);
 
             bundle.Assets.Count.ShouldEqual(1);
-            using (var reader = new StreamReader(bundle.Assets[0].OpenStream()))
+            using (var reader = new StreamReader(bundle.Assets.First().OpenStream()))
             {
                 reader.ReadToEnd().ShouldEqual("asset1" + Environment.NewLine + "content" + Environment.NewLine + "asset2" + Environment.NewLine + "content");
             }
-            (bundle.Assets[0] as IDisposable).Dispose();
+            (bundle.Assets.First() as IDisposable).Dispose();
         }
 
         [Fact]
@@ -63,7 +63,7 @@ namespace Cassette.BundleProcessing
             var processor = new ConcatenateAssets();
             processor.Process(bundle);
 
-            bundle.Assets[0].References
+            bundle.Assets.First().References
                 .Select(r => r.ToPath)
                 .OrderBy(f => f)
                 .SequenceEqual(new[] { "~\\other1.js", "~\\other1.js", "~\\other2.js" })
@@ -84,11 +84,11 @@ namespace Cassette.BundleProcessing
             var processor = new ConcatenateAssets { Separator = ";" };
             processor.Process(bundle);
 
-            using (var reader = new StreamReader(bundle.Assets[0].OpenStream()))
+            using (var reader = new StreamReader(bundle.Assets.First().OpenStream()))
             {
                 reader.ReadToEnd().ShouldEqual("asset1;asset2");
             }
-            (bundle.Assets[0] as IDisposable).Dispose();
+            (bundle.Assets.First() as IDisposable).Dispose();
         }
     }
 }
