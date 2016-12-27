@@ -1,14 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Text;
 
 namespace Cassette.Utilities
 {
     public static class ByteArrayExtensions
     {
-        public static string ToHexString(this IEnumerable<byte> bytes)
+        private static readonly string hexDigits =  "0123456789abcdef";
+
+        public static string ToHexString(this byte[] bytes)
         {
-            return string.Concat(bytes.Select(b => b.ToString("x2")).ToArray());
+            var buffer = new StringBuilder(bytes.Length);
+            foreach(var b in bytes)
+            {
+                var high = b >> 4;
+                var low = b & 0x0f;
+                buffer.Append(hexDigits[high]);
+                buffer.Append(hexDigits[low]);
+            }
+            return buffer.ToString();
         }
 
         public static byte[] FromHexString(string hex)
