@@ -18,7 +18,7 @@ namespace Cassette
     public abstract class Bundle : IDisposable
     {
         readonly string path;
-        readonly List<IAsset> assets = new List<IAsset>();
+        readonly AssetCollection assets = new AssetCollection();
         readonly HashedSet<string> references = new HashedSet<string>();
         readonly HtmlAttributeDictionary htmlAttributes = new HtmlAttributeDictionary();
 
@@ -62,10 +62,7 @@ namespace Cassette
         /// <summary>
         /// The assets contained in the bundle.
         /// </summary>
-        public IList<IAsset> Assets
-        {
-            get { return assets; }
-        }
+        public AssetCollection Assets => assets;
 
         /// <summary>
         /// Gets the hash of the combined assets.
@@ -131,7 +128,9 @@ namespace Cassette
         public Stream OpenStream()
         {
             if (assets.Count == 0) return Stream.Null;
-            return assets[0].OpenStream();
+            // What is this really supposed to do? It originally just opened the 'first' asset. Is this a requirement?
+            // Should it concatenate them? Is there any reason not to return a random asset?
+            return assets.Single().OpenStream();
         }
 
         /// <summary>
@@ -215,8 +214,7 @@ namespace Cassette
                 );
                 throw new InvalidOperationException("Cycles detected in asset references:" + Environment.NewLine + details);
             }
-            assets.Clear();
-            assets.AddRange(graph.TopologicalSort());
+            assets.ReplaceWith(graph.TopologicalSort());
             IsSorted = true;
         }
 
@@ -226,8 +224,8 @@ namespace Cassette
 
             Trace.Source.TraceInformation("Concatenating assets of {0}", path);
             var concatenated = new ConcatenatedAsset(path, assets, separator);
-            assets.Clear();
-            assets.Add(concatenated);
+
+            assets.ReplaceWith(concatenated);
             Trace.Source.TraceInformation("Concatenated assets of {0}", path);
         }
 

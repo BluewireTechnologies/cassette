@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Cassette.BundleProcessing;
 
 namespace Cassette.HtmlTemplates
@@ -11,7 +12,7 @@ namespace Cassette.HtmlTemplates
             if (bundle.Assets.Count > 1) throw new ArgumentException("WrapJavaScriptHtmlTemplates should only process a bundle where the assets have been concatenated.", "bundle");
 
             var transformer = new WrapJavaScriptHtmlTemplatesTransformer(bundle.ContentType);
-            bundle.Assets[0].AddAssetTransformer(transformer);
+            bundle.Assets.Single().AddAssetTransformer(transformer);
         }
     }
 }

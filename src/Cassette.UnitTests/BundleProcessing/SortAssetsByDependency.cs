@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Moq;
 using Should;
 using Xunit;
@@ -23,8 +24,8 @@ namespace Cassette.BundleProcessing
             var sorter = new SortAssetsByDependency();
             sorter.Process(bundle);
 
-            bundle.Assets[0].ShouldBeSameAs(assetB.Object);
-            bundle.Assets[1].ShouldBeSameAs(assetA.Object);
+            bundle.Assets.ElementAt(0).ShouldBeSameAs(assetB.Object);
+            bundle.Assets.ElementAt(1).ShouldBeSameAs(assetA.Object);
         }
 
         [Fact]
@@ -43,8 +44,8 @@ namespace Cassette.BundleProcessing
             var sorter = new SortAssetsByDependency();
             sorter.Process(bundle);
 
-            bundle.Assets[0].ShouldBeSameAs(assetB.Object);
-            bundle.Assets[1].ShouldBeSameAs(assetA.Object);
+            bundle.Assets.ElementAt(0).ShouldBeSameAs(assetB.Object);
+            bundle.Assets.ElementAt(1).ShouldBeSameAs(assetA.Object);
         }
 
         [Fact]
@@ -64,8 +65,8 @@ namespace Cassette.BundleProcessing
             var sorter = new SortAssetsByDependency();
             sorter.Process(bundle);
 
-            bundle.Assets[0].ShouldBeSameAs(assetA.Object);
-            bundle.Assets[1].ShouldBeSameAs(assetB.Object);
+            bundle.Assets.ElementAt(0).ShouldBeSameAs(assetA.Object);
+            bundle.Assets.ElementAt(1).ShouldBeSameAs(assetB.Object);
         }
 
         [Fact]

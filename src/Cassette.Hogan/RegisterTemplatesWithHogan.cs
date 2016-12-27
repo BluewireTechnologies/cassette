@@ -1,4 +1,5 @@
-﻿using Cassette.BundleProcessing;
+﻿using System.Linq;
+using Cassette.BundleProcessing;
 
 namespace Cassette.HtmlTemplates
 {
@@ -26,7 +27,7 @@ namespace Cassette.HtmlTemplates
         {
             if (bundle.Assets.Count > 0)
             {
-                bundle.Assets[0].AddAssetTransformer(new DefineJavaScriptVariable(javaScriptVariableName));
+                bundle.Assets.First().AddAssetTransformer(new DefineJavaScriptVariable(javaScriptVariableName));
             }
         }
 

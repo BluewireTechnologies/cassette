@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Cassette.BundleProcessing;
 using Cassette.IO;
@@ -60,7 +61,7 @@ namespace Cassette.Spriting
 
         string ReadCssFromBundle(StylesheetBundle bundle)
         {
-            using (var reader = new StreamReader(bundle.Assets[0].OpenStream()))
+            using (var reader = new StreamReader(bundle.Assets.First().OpenStream()))
             {
                 return reader.ReadToEnd();
             }
@@ -74,9 +75,8 @@ namespace Cassette.Spriting
 
         void ReplaceBundleCss(StylesheetBundle bundle, string newCss)
         {
-            var spritedCss = new SpritedCss(newCss, bundle.Assets[0]);
-            bundle.Assets.Clear();
-            bundle.Assets.Add(spritedCss);
+            var spritedCss = new SpritedCss(newCss, bundle.Assets.First());
+            bundle.Assets.ReplaceWith(spritedCss);
 
             bundle.Hash = spritedCss.Hash;
         }

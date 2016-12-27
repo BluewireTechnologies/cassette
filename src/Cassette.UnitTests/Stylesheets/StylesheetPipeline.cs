@@ -183,7 +183,7 @@ namespace Cassette.Stylesheets
             var pipeline = new StylesheetPipeline(container, settings);
             pipeline.Process(bundle);
 
-            using (var reader = new StreamReader(bundle.Assets[0].OpenStream()))
+            using (var reader = new StreamReader(bundle.Assets.First().OpenStream()))
             {
                 reader.ReadToEnd().ShouldEqual("p{color:#fff}");
             }
