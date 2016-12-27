@@ -22,8 +22,10 @@ namespace Cassette
 
         public bool IsRawFileReferenceFound { get; private set; }
 
-        public void Visit(Bundle bundle)
+        public bool Visit(Bundle bundle)
         {
+            if (IsRawFileReferenceFound) return false; // Shortcircuit; already found.
+            return true;
         }
 
         public void Visit(IAsset asset)

@@ -14,20 +14,18 @@ namespace Cassette
         string normalizedPath;
         bool isFound;
 
-        public bool Result
-        {
-            get { return isFound; }
-        }
+        public bool Result => isFound;
 
-        void IBundleVisitor.Visit(Bundle bundle)
+        bool IBundleVisitor.Visit(Bundle bundle)
         {
-            if (isFound) return;
+            if (isFound) return false; // Shortcircuit; already found.
             normalizedPath = originalPath.IsUrl() ? originalPath : NormalizePath(originalPath, bundle);
 
             if (IsMatch(bundle.Path))
             {
                 isFound = true;
             }
+            return true;
         }
 
         void IBundleVisitor.Visit(IAsset asset)

@@ -182,7 +182,7 @@ namespace Cassette
 
         public void Accept(IBundleVisitor visitor)
         {
-            visitor.Visit(this);
+            if (!visitor.Visit(this)) return;
             foreach (var asset in assets)
             {
                 asset.Accept(visitor);
@@ -313,9 +313,7 @@ namespace Cassette
 
             public List<IAsset> Assets { get; private set; }
 
-            public void Visit(Bundle bundle)
-            {
-            }
+            public bool Visit(Bundle bundle) => true;
 
             public void Visit(IAsset asset)
             {
