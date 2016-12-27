@@ -306,6 +306,7 @@
     <Compile Include="Stylesheets\StylesheetBundleFactory.cs" />
     <Compile Include="UrlGenerator.cs" />
     <Compile Include="Utilities\ByteArrayExtensions.cs" />
+    <Compile Include="Utilities\CaseInsensitivePathEqualityComparer.cs" />
     <Compile Include="Utilities\DisposableLazy.cs" />
     <Compile Condition="'$(TargetFrameworkVersion)' == 'v3.5'" Include="Utilities\EnumT.cs" />
     <Compile Include="Utilities\HashedSets.cs" />

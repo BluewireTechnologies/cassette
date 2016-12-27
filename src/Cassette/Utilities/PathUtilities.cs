@@ -59,17 +59,7 @@ namespace Cassette.Utilities
 
         public static bool PathsEqual(string path1, string path2)
         {
-            if (path1 == null && path2 == null)
-            {
-                return true;
-            }
-            if (path1 == null || path2 == null)
-            {
-                return false;
-            }
-            var normalisedPath1 = path1.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
-            var normalisedPath2 = path2.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
-            return StringComparer.OrdinalIgnoreCase.Equals(normalisedPath1, normalisedPath2);
+            return new CaseInsensitivePathEqualityComparer().Equals(path1, path2);
         }
 
         public static string AppRelative(string path)
