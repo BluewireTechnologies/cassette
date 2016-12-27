@@ -40,7 +40,7 @@ namespace Cassette
 
         public string CreateRawFileUrl(string filename)
         {
-            if (filename.StartsWith("~") == false)
+            if (!filename.StartsWithCharacter('~'))
             {
                 throw new ArgumentException("Image filename must be application relative (starting with '~'). Filename: "+filename);
             }
@@ -59,7 +59,7 @@ namespace Cassette
 
         string IUrlGenerator.CreateRawFileUrl(string filename, string hash)
         {
-            if (filename.StartsWith("~") == false)
+            if (!filename.StartsWithCharacter('~'))
             {
                 throw new ArgumentException("Image filename must be application relative (starting with '~'). Filename: "+filename);
             }
@@ -84,7 +84,7 @@ namespace Cassette
 
         public string CreateCachedFileUrl(string filename)
         {
-            if (filename.StartsWith("~") == false)
+            if (!filename.StartsWithCharacter('~'))
             {
                 throw new ArgumentException("Filename must be application relative (starting with '~'). Filename: "+filename, "filename");
             }
@@ -110,10 +110,7 @@ namespace Cassette
         /// </summary>
         string UriEscapePathSegments(string path)
         {
-            return string.Join(
-                "/", 
-                path.Split('/').Select(Uri.EscapeDataString).ToArray()
-            );
+            return path.Split('/').Select(Uri.EscapeDataString).JoinStrings("/");
         }
     }
 }

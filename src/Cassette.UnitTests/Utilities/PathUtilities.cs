@@ -7,6 +7,12 @@ namespace Cassette.Utilities
     public class PathUtilities_NormalizePath_Tests
     {
         [Fact]
+        public void EmptyPath_ThrowsArgumentException()
+        {
+            Assert.Throws<ArgumentException>(() => PathUtilities.NormalizePath(""));
+        }
+
+        [Fact]
         public void NormalizedPathRemainsNormalized()
         {
             PathUtilities.NormalizePath("foo/bar").ShouldEqual("foo/bar");

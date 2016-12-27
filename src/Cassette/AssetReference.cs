@@ -17,6 +17,7 @@ namespace Cassette
 
         static void ValidatePath(string path, AssetReferenceType type)
         {
+            if (String.IsNullOrEmpty(path)) throw new ArgumentException(nameof(path));
             if (type == AssetReferenceType.Url)
             {
                 if (!path.IsUrl())
@@ -26,7 +27,7 @@ namespace Cassette
             }
             else
             {
-                if (!path.StartsWith("~"))
+                if (!path.StartsWithCharacter('~'))
                 {
                     throw new ArgumentException(string.Format("Referenced path must be application relative and start with a \"~\". Path: {0}", path), "path");
                 }

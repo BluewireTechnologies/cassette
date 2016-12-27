@@ -52,24 +52,7 @@ namespace Cassette
             }
             else
             {
-                string appRelativeFilename;
-                if (assetRelativePath.StartsWith("~"))
-                {
-                    appRelativeFilename = assetRelativePath;
-                }
-                else if (assetRelativePath.StartsWith("/"))
-                {
-                    appRelativeFilename = "~" + assetRelativePath;
-                }
-                else
-                {
-                    var subDirectory = sourceFile.Directory.FullPath;
-                    appRelativeFilename = PathUtilities.CombineWithForwardSlashes(
-                        subDirectory,
-                        assetRelativePath
-                        );
-                }
-                appRelativeFilename = PathUtilities.NormalizePath(appRelativeFilename);
+                var appRelativeFilename = PathUtilities.AppRelative(sourceFile.Directory.FullPath, assetRelativePath);
                 AddBundleReference(appRelativeFilename, lineNumber);
             }
         }
@@ -89,22 +72,12 @@ namespace Cassette
 
         public override void AddRawFileReference(string relativeFilename)
         {
-            if (relativeFilename.StartsWith("/"))
-            {
-                relativeFilename = "~" + relativeFilename;
-            }
-            else if (!relativeFilename.StartsWith("~"))
-            {
-                relativeFilename = PathUtilities.NormalizePath(PathUtilities.CombineWithForwardSlashes(
-                    sourceFile.Directory.FullPath,
-                    relativeFilename
-                ));
-            }
+            var appRelativeFilename = PathUtilities.AppRelative(sourceFile.Directory.FullPath, relativeFilename);
 
-            var alreadyExists = references.Any(r => r.ToPath.Equals(relativeFilename, StringComparison.OrdinalIgnoreCase));
+            var alreadyExists = references.Any(r => r.ToPath.Equals(appRelativeFilename, StringComparison.OrdinalIgnoreCase));
             if (alreadyExists) return;
 
-            references.Add(new AssetReference(Path, relativeFilename, -1, AssetReferenceType.RawFilename));
+            references.Add(new AssetReference(Path, appRelativeFilename, -1, AssetReferenceType.RawFilename));
         }
 
         byte[] ComputeHash()
@@ -119,11 +92,6 @@ namespace Cassette
         protected override Stream OpenStreamCore()
         {
             return sourceFile.OpenRead();
-        }
-
-        public override void Accept(IBundleVisitor visitor)
-        {
-            visitor.Visit(this);
         }
     }
 }

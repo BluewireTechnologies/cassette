@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Cassette.Utilities;
 
 namespace Cassette
@@ -7,8 +8,9 @@ namespace Cassette
     {
         public static BundleContainsPartialPathPredicate CreateFor(string originalPath)
         {
+            if (String.IsNullOrEmpty(originalPath)) throw new ArgumentException(nameof(originalPath));
             if (originalPath.IsUrl()) return new AbsolutePredicate(originalPath, originalPath);
-            if (originalPath.StartsWith("~")) return new AbsolutePredicate(originalPath, originalPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
+            if (originalPath.StartsWithCharacter('~')) return new AbsolutePredicate(originalPath, originalPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
             return new RelativePredicate(originalPath);
         }
         

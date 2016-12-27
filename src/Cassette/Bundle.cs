@@ -227,23 +227,7 @@ namespace Cassette
 
         protected virtual string ConvertReferenceToAppRelative(string reference)
         {
-            if (reference.IsUrl()) return reference;
-
-            if (reference.StartsWith("~"))
-            {
-                return PathUtilities.NormalizePath(reference);
-            }
-            else if (reference.StartsWith("/"))
-            {
-                return PathUtilities.NormalizePath("~" + reference);
-            }
-            else
-            {
-                return PathUtilities.NormalizePath(PathUtilities.CombineWithForwardSlashes(
-                    Path,
-                    reference
-                ));
-            }
+            return PathUtilities.AppRelative(Path, reference);
         }
 
         internal abstract void SerializeInto(XContainer container);

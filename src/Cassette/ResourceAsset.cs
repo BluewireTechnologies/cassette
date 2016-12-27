@@ -45,11 +45,6 @@ namespace Cassette
             get { yield break; }
         }
 
-        public override void Accept(IBundleVisitor visitor)
-        {
-            visitor.Visit(this);
-        }
-
         public override void AddReference(string assetRelativePath, int lineNumber)
         {
         }

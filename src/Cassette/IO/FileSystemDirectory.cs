@@ -87,7 +87,7 @@ namespace Cassette.IO
         public IDirectory GetDirectory(string path)
         {
             if (path == "") return this;
-            if (path[0] == '~')
+            if (path.StartsWithCharacter('~'))
             {
                 path = path.Length == 1 ? "" : path.Substring(2);
                 return GetRootDirectory().GetDirectory(path);
