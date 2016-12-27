@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Text.RegularExpressions;
 using Cassette.Utilities;
 
@@ -34,16 +35,17 @@ namespace Cassette.Scripts
         /// Handle cases of the content already wrapped in a &lt;script&gt; tag.
         /// </summary>
         /// <returns></returns>
-        string GetScriptContent()
+        void RenderScriptContent(StringBuilder sb)
         {
             var htmlAttributes = HtmlAttributes.CombinedAttributes; // should start with a space
 
             if (isContentScriptTag)
             {
-                return DetectScriptRegex.Replace(scriptContent,
-                    m => m.Value + htmlAttributes, 1, 0); // don't need a space after the attributes - the regex is checking for "\b"
+                sb.Append(DetectScriptRegex.Replace(scriptContent,
+                    m => m.Value + htmlAttributes, 1, 0)); // don't need a space after the attributes - the regex is checking for "\b"
+                return;
             }
-            return String.Format(
+            sb.AppendFormat(
                 HtmlConstants.InlineScriptHtml,
                 htmlAttributes,
                 Environment.NewLine,
@@ -53,9 +55,8 @@ namespace Cassette.Scripts
 
         internal override string Render()
         {
-            var content = GetScriptContent();
             var conditionalRenderer = new ConditionalRenderer();
-            return conditionalRenderer.Render(Condition, html => html.Append(content));
+            return conditionalRenderer.Render(Condition, RenderScriptContent);
         }
 
         public override bool Equals(object obj)
@@ -65,20 +66,7 @@ namespace Cassette.Scripts
 
         protected override string ConvertReferenceToAppRelative(string reference)
         {
-            if (reference.IsUrl()) return reference;
-
-            if (reference.StartsWith("~"))
-            {
-                return PathUtilities.NormalizePath(reference);
-            }
-            else if (reference.StartsWith("/"))
-            {
-                return PathUtilities.NormalizePath("~" + reference);
-            }
-            else
-            {
-                return "~/" + reference;
-            }
+            return PathUtilities.AppRelative(reference);
         }
     }
 #pragma warning restore 659

@@ -8,10 +8,9 @@ namespace Cassette.HtmlTemplates
     {
         public string Render(HtmlTemplateBundle bundle)
         {
-            return string.Join(
-                Environment.NewLine,
-                bundle.Assets.Select(asset => asset.OpenStream().ReadToEnd()).ToArray()
-            );
+            return bundle.Assets
+                .Select(asset => asset.OpenStream().ReadToEnd())
+                .JoinStrings(Environment.NewLine);
         }
     }
 }

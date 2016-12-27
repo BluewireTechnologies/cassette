@@ -2713,7 +2713,7 @@ namespace Cassette.TinyIoC
         #region Type Registrations
         public sealed class TypeRegistration
         {
-            private int _hashCode;
+            private readonly int _hashCode;
 
             public Type Type { get; private set; }
             public string Name { get; private set; }
@@ -2728,29 +2728,25 @@ namespace Cassette.TinyIoC
                 Type = type;
                 Name = name;
 
-                _hashCode = String.Concat(Type.FullName, "|", Name).GetHashCode();
+                unchecked
+                {
+                    _hashCode = (Type.GetHashCode()*397) ^ Name.GetHashCode();
+                }
+            }
+
+            bool Equals(TypeRegistration other)
+            {
+                return Type == other.Type && string.Equals(Name, other.Name);
             }
 
             public override bool Equals(object obj)
             {
-                var typeRegistration = obj as TypeRegistration;
-
-                if (typeRegistration == null)
-                    return false;
-
-                if (Type != typeRegistration.Type)
-                    return false;
-
-                if (String.Compare(Name, typeRegistration.Name, StringComparison.Ordinal) != 0)
-                    return false;
-
-                return true;
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                return obj is TypeRegistration && Equals((TypeRegistration)obj);
             }
 
-            public override int GetHashCode()
-            {
-                return _hashCode;
-            }
+            public override int GetHashCode() => _hashCode;
         }
         private readonly SafeDictionary<TypeRegistration, ObjectFactoryBase> _RegisteredTypes;
         #endregion

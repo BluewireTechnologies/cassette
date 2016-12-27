@@ -95,22 +95,18 @@ namespace Cassette
 
         IEnumerable<Bundle> GetBundles(string path, Func<Bundle> createExternalBundle)
         {
-            path = PathUtilities.AppRelative(path);
+            var appRelativePath = PathUtilities.AppRelative(path);
 
-            var bundles = allBundles.FindBundlesContainingPath(path).ToArray();
-            if (bundles.Length == 0 && path.IsUrl())
+            var bundles = allBundles.FindBundlesContainingPath(appRelativePath).ToArray();
+            if (bundles.Length > 0) return bundles;
+
+            if (appRelativePath.IsUrl())
             {
                 var bundle = createExternalBundle();
                 bundle.Process(settings);
-                bundles = new[] { bundle };
+                return new[] { bundle };
             }
-
-            if (bundles.Length == 0)
-            {
-                throw new ArgumentException("Cannot find an asset bundle containing the path \"" + path + "\".");
-            }
-
-            return bundles;
+            throw new ArgumentException("Cannot find an asset bundle containing the path \"" + appRelativePath + "\".");
         }
 
         public void Reference(Bundle bundle, string location = null)
@@ -177,11 +173,10 @@ namespace Cassette
         string CreateHtml<T>(string location)
             where T : Bundle
         {
-            return string.Join(Environment.NewLine,
-                GetBundles(location).OfType<T>().Select(
-                    bundle => bundle.Render()
-                ).ToArray()
-            );
+            return GetBundles(location)
+                .OfType<T>()
+                .Select(bundle => bundle.Render())
+                .JoinStrings(Environment.NewLine);
         }
 
         class ReferencedBundle

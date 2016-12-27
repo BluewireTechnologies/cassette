@@ -1,4 +1,5 @@
 ﻿using System;
+using Cassette.Utilities;
 
 namespace Cassette
 {
@@ -12,7 +13,7 @@ namespace Cassette
         public VirtualDirectoryPrepender(string virtualDirectory)
         {
             if (string.IsNullOrEmpty(virtualDirectory) ||
-                !virtualDirectory.StartsWith("/"))
+                !virtualDirectory.StartsWithCharacter('/'))
             {
                 throw new ArgumentException("Virtual directory must start with a forward slash.");
             }

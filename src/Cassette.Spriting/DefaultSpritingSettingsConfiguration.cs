@@ -1,4 +1,5 @@
 ﻿using System;
+using Cassette.Utilities;
 
 namespace Cassette.Spriting
 {
@@ -15,7 +16,7 @@ namespace Cassette.Spriting
 
         static bool IsLocalPngUrl(string imageUrl)
         {
-            return imageUrl.StartsWith("/") 
+            return imageUrl.StartsWithCharacter('/') 
                 && imageUrl.EndsWith(".png", StringComparison.OrdinalIgnoreCase);
         }
     }

@@ -117,7 +117,7 @@ namespace Cassette.Stylesheets
             originalUrl = SplitOnLastOccurence(originalUrl, '?', out queryString);
             originalUrl = Uri.UnescapeDataString(originalUrl);
 
-            if (originalUrl.StartsWith("/"))
+            if (originalUrl.StartsWithCharacter('/'))
             {
                 return PathUtilities.NormalizePath("~" + originalUrl);
             }
@@ -130,7 +130,7 @@ namespace Cassette.Stylesheets
 
             // URLs that start with a "/" are assumed to be rooted, not relative to the virtual directory.
             // So leave them as they are.
-            if (url.StartsWith("/")) return;
+            if (url.StartsWithCharacter('/')) return;
 
             var absoluteUrl = urlGenerator.CreateAbsolutePathUrl(currentDirectory + "/" + url);
             builder.Remove(matchedUrlGroup.Index, matchedUrlGroup.Length);
