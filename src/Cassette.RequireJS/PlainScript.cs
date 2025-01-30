@@ -105,7 +105,7 @@ namespace Cassette.RequireJS
                 "define({0},{1},function({2}){{{3}\r\n}});",
                 jsonSerializer.Serialize(ModulePath),
                 jsonSerializer.Serialize(DependencyPaths),
-                string.Join(",", DependencyAliases),
+                DependencyAliases.JoinStrings(","),
                 source
             );
         }
@@ -116,7 +116,7 @@ namespace Cassette.RequireJS
                 "define({0},{1},function({2}){{{3}\r\nreturn {4};}});",
                 jsonSerializer.Serialize(ModulePath),
                 jsonSerializer.Serialize(DependencyPaths),
-                string.Join(",", DependencyAliases),
+                DependencyAliases.JoinStrings(","),
                 source,
                 export
             );

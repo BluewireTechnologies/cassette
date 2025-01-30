@@ -207,6 +207,7 @@ namespace Cassette
         public void AcceptCallsAcceptForEachAsset()
         {
             var visitor = new Mock<IBundleVisitor>();
+            visitor.Setup(v => v.Visit(It.IsAny<Bundle>())).Returns(true);
             var bundle = new TestableBundle("~/test");
             var asset1 = new Mock<IAsset>();
             var asset2 = new Mock<IAsset>();

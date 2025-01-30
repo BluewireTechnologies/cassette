@@ -37,11 +37,6 @@ namespace Cassette
             get { return ReferenceList; }
         }
 
-        public override void Accept(IBundleVisitor visitor)
-        {
-            visitor.Visit(this);
-        }
-
         public override void AddReference(string assetRelativePath, int lineNumber)
         {
         }

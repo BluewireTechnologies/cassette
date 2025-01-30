@@ -16,9 +16,7 @@ namespace Cassette
             this.container = container;
         }
 
-        void IBundleVisitor.Visit(Bundle bundle)
-        {
-        }
+        bool IBundleVisitor.Visit(Bundle bundle) => true;
 
         void IBundleVisitor.Visit(IAsset asset)
         {

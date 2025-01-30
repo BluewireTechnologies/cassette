@@ -150,11 +150,7 @@ namespace Cassette.Scripts
             {
                 var scripts = scriptElements.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
 
-                return string.Join(
-                    Environment.NewLine,
-                    (from script in scripts
-                     select "document.write('" + Escape(script) + "');").ToArray()
-                );
+                return scripts.Select(script => $"document.write('{Escape(script)}');").JoinStrings(Environment.NewLine);
             }
 
             static string Escape(string script)

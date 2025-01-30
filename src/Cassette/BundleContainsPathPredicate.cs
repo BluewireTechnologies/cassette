@@ -1,60 +1,34 @@
-﻿using System.IO;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
 using Cassette.Utilities;
 
 namespace Cassette
 {
-    class BundleContainsPathPredicate : IBundleVisitor
+    class BundleContainsPathPredicate
     {
         public BundleContainsPathPredicate(string path)
         {
+            if (String.IsNullOrEmpty(path)) throw new ArgumentException(nameof(path));
             originalPath = path;
         }
 
         readonly string originalPath;
-        string normalizedPath;
-        bool isFound;
 
-        public bool Result
+        public bool EvaluateFor(Bundle bundle)
         {
-            get { return isFound; }
+            var normalizedPath = originalPath.IsUrl() ? originalPath : NormalizePath(originalPath, bundle);
+
+            if (new CaseInsensitivePathEqualityComparer().Equals(bundle.Path, normalizedPath)) return true;
+            return bundle.Assets.ContainsPath(normalizedPath);
         }
 
-        void IBundleVisitor.Visit(Bundle bundle)
+        static string NormalizePath(string path, Bundle bundle)
         {
-            if (isFound) return;
-            normalizedPath = originalPath.IsUrl() ? originalPath : NormalizePath(originalPath, bundle);
-
-            if (IsMatch(bundle.Path))
-            {
-                isFound = true;
-            }
-        }
-
-        void IBundleVisitor.Visit(IAsset asset)
-        {
-            if (isFound) return;
-            if (IsMatch(asset.Path))
-            {
-                isFound = true;
-            }
-        }
-
-        string NormalizePath(string path, Bundle bundle)
-        {
-            path = path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-            if (path.StartsWith("~"))
-            {
-                return path;
-            }
-            else
-            {
-                return PathUtilities.CombineWithForwardSlashes(bundle.Path, path);
-            }
-        }
-
-        bool IsMatch(string path)
-        {
-            return PathUtilities.PathsEqual(path, normalizedPath);
+            var trimmedPath = path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            if (trimmedPath.Length == 0) return bundle.Path;
+            if (trimmedPath.StartsWithCharacter('~')) return trimmedPath;
+            return PathUtilities.CombineWithForwardSlashes(bundle.Path, trimmedPath);
         }
     }
 }

@@ -123,7 +123,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Asset.cs" />
-    <Compile Include="AssetPathComparer.cs" />
     <Compile Include="BundleCollection.FindBundlesContainingPath.cs" />
     <Compile Include="BundleCollection.BuildReferences.cs" />
     <Compile Include="BundleCollection.SortBundles.cs" />

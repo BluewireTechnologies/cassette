@@ -143,7 +143,7 @@ namespace Cassette.Scripts
         [Fact]
         public void ReadBundleAssetCountEqualsAssetElementCount()
         {
-            var asset = bundle.Assets[0].ShouldBeType<CachedBundleContent>();
+            var asset = bundle.Assets.ElementAt(0).ShouldBeType<CachedBundleContent>();
             asset.OriginalAssets.Count().ShouldEqual(2);
         }
 

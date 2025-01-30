@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Cassette.Utilities;
 using Storage = System.IO.IsolatedStorage.IsolatedStorageFile;
 
 namespace Cassette.IO
@@ -70,7 +71,7 @@ namespace Cassette.IO
             IsolatedStorageDirectory directory;
             if (parts.Length > 2)
             {
-                var subDirectory = string.Join("/", parts.Reverse().Skip(1).Reverse().ToArray());
+                var subDirectory = parts.Reverse().Skip(1).Reverse().JoinStrings("/");
                 directory = new IsolatedStorageDirectory(getStorage, subDirectory);
             }
             else
@@ -82,7 +83,8 @@ namespace Cassette.IO
 
         string GetAbsolutePath(string path)
         {
-            if (path.StartsWith("~")) return path;
+            if (path.Length == 0) return basePath;
+            if (path.StartsWithCharacter('~')) return path;
             return Path.Combine(basePath, path);
         }
 

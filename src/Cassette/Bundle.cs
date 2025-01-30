@@ -18,7 +18,7 @@ namespace Cassette
     public abstract class Bundle : IDisposable
     {
         readonly string path;
-        readonly List<IAsset> assets = new List<IAsset>();
+        readonly AssetCollection assets = new AssetCollection();
         readonly HashedSet<string> references = new HashedSet<string>();
         readonly HtmlAttributeDictionary htmlAttributes = new HtmlAttributeDictionary();
 
@@ -62,10 +62,7 @@ namespace Cassette
         /// <summary>
         /// The assets contained in the bundle.
         /// </summary>
-        public IList<IAsset> Assets
-        {
-            get { return assets; }
-        }
+        public AssetCollection Assets => assets;
 
         /// <summary>
         /// Gets the hash of the combined assets.
@@ -131,7 +128,9 @@ namespace Cassette
         public Stream OpenStream()
         {
             if (assets.Count == 0) return Stream.Null;
-            return assets[0].OpenStream();
+            // What is this really supposed to do? It originally just opened the 'first' asset. Is this a requirement?
+            // Should it concatenate them? Is there any reason not to return a random asset?
+            return assets.Single().OpenStream();
         }
 
         /// <summary>
@@ -169,21 +168,17 @@ namespace Cassette
         internal virtual bool ContainsPath(string pathToFind)
         {
             var predicate = new BundleContainsPathPredicate(pathToFind);
-            Accept(predicate);
-            return predicate.Result;
+            return predicate.EvaluateFor(this);
         }
 
         internal IAsset FindAssetByPath(string pathToFind)
         {
-            //return assets.FirstOrDefault(asset => PathUtilities.PathsEqual(asset.Path, pathToFind));
-            var assetFinder = new AssetFinder(pathToFind);
-            Accept(assetFinder);
-            return assetFinder.FoundAsset;
+            return assets.FindByPath(pathToFind);
         }
 
         public void Accept(IBundleVisitor visitor)
         {
-            visitor.Visit(this);
+            if (!visitor.Visit(this)) return;
             foreach (var asset in assets)
             {
                 asset.Accept(visitor);
@@ -215,8 +210,7 @@ namespace Cassette
                 );
                 throw new InvalidOperationException("Cycles detected in asset references:" + Environment.NewLine + details);
             }
-            assets.Clear();
-            assets.AddRange(graph.TopologicalSort());
+            assets.ReplaceWith(graph.TopologicalSort());
             IsSorted = true;
         }
 
@@ -226,30 +220,14 @@ namespace Cassette
 
             Trace.Source.TraceInformation("Concatenating assets of {0}", path);
             var concatenated = new ConcatenatedAsset(path, assets, separator);
-            assets.Clear();
-            assets.Add(concatenated);
+
+            assets.ReplaceWith(concatenated);
             Trace.Source.TraceInformation("Concatenated assets of {0}", path);
         }
 
         protected virtual string ConvertReferenceToAppRelative(string reference)
         {
-            if (reference.IsUrl()) return reference;
-
-            if (reference.StartsWith("~"))
-            {
-                return PathUtilities.NormalizePath(reference);
-            }
-            else if (reference.StartsWith("/"))
-            {
-                return PathUtilities.NormalizePath("~" + reference);
-            }
-            else
-            {
-                return PathUtilities.NormalizePath(PathUtilities.CombineWithForwardSlashes(
-                    Path,
-                    reference
-                ));
-            }
+            return PathUtilities.AppRelative(Path, reference);
         }
 
         internal abstract void SerializeInto(XContainer container);
@@ -287,9 +265,8 @@ namespace Cassette
             var collectorY = new CollectLeafAssets();
             y.Accept(collectorY);
 
-            var assetsX = collectorX.Assets.OrderBy(a => a.Path);
-            var assetsY = collectorY.Assets.OrderBy(a => a.Path);
-            return assetsX.SequenceEqual(assetsY, new AssetPathComparer());
+            var assetsX = new HashSet<string>(collectorX.Assets.Select(a => a.Path), StringComparer.Ordinal);
+            return assetsX.SetEquals(collectorY.Assets.Select(a => a.Path));
         }
 
         protected virtual void Dispose(bool disposing)
@@ -315,9 +292,7 @@ namespace Cassette
 
             public List<IAsset> Assets { get; private set; }
 
-            public void Visit(Bundle bundle)
-            {
-            }
+            public bool Visit(Bundle bundle) => true;
 
             public void Visit(IAsset asset)
             {

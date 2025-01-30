@@ -4,18 +4,17 @@ using Cassette.Utilities;
 
 namespace Cassette
 {
-    abstract class BundleContainsPartialPathPredicate : IBundleVisitor
+    abstract class BundleContainsPartialPathPredicate
     {
         public static BundleContainsPartialPathPredicate CreateFor(string originalPath)
         {
+            if (String.IsNullOrEmpty(originalPath)) throw new ArgumentException(nameof(originalPath));
             if (originalPath.IsUrl()) return new AbsolutePredicate(originalPath, originalPath);
-            if (originalPath.StartsWith("~")) return new AbsolutePredicate(originalPath, originalPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
+            if (originalPath.StartsWithCharacter('~')) return new AbsolutePredicate(originalPath, originalPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
             return new RelativePredicate(originalPath);
         }
-
-        public bool Result { get; private set; }
-        public abstract void Visit(Bundle bundle);
-        public abstract void Visit(IAsset asset);
+        
+        public abstract bool EvaluateFor(Bundle bundle);
 
         class AbsolutePredicate : BundleContainsPartialPathPredicate
         {
@@ -28,37 +27,13 @@ namespace Cassette
             readonly string originalPath;
             readonly string normalizedPath;
 
-            public override void Visit(Bundle bundle)
+            public override bool EvaluateFor(Bundle bundle)
             {
-                if (Result) return;
-                if (IsMatch(bundle.Path))
-                {
-                    Result = true;
-                }
-            }
+                if (new CaseInsensitivePathEqualityComparer().Equals(bundle.Path, normalizedPath)) return true;
+                if (bundle.Assets.ContainsPath(normalizedPath)) return true;
+                if (bundle.Assets.ContainsPathPrefix(originalPath)) return true;
 
-            public override void Visit(IAsset asset)
-            {
-                if (Result) return;
-                if (IsMatch(asset.Path) || IsPartialAssetPathMatch(asset.Path))
-                {
-                    Result = true;
-                }
-            }
-
-            /// <summary>
-            /// Looking for "~/bundle/sub" can match "~/bundle/sub/asset.js"
-            /// </summary>
-            bool IsPartialAssetPathMatch(string assetPath)
-            {
-                if (assetPath.Length < originalPath.Length) return false;
-
-                return assetPath.StartsWith(originalPath, StringComparison.OrdinalIgnoreCase);
-            }
-
-            bool IsMatch(string path)
-            {
-                return PathUtilities.PathsEqual(path, normalizedPath);
+                return false;
             }
         }
 
@@ -71,45 +46,18 @@ namespace Cassette
             }
 
             readonly string originalPath;
-            string localPath;
-
             readonly string originalPathWithoutTrailingSlashes;
 
-            public override void Visit(Bundle bundle)
+            public override bool EvaluateFor(Bundle bundle)
             {
-                if (Result) return;
-
                 // Within this bundle, match assets according to this resolved path:
-                localPath = PathUtilities.CombineWithForwardSlashes(bundle.Path, originalPathWithoutTrailingSlashes);
+                var localPath = PathUtilities.CombineWithForwardSlashes(bundle.Path, originalPathWithoutTrailingSlashes);
 
-                if (IsMatch(bundle.Path))
-                {
-                    Result = true;
-                }
-            }
+                if (new CaseInsensitivePathEqualityComparer().Equals(bundle.Path, localPath)) return true;
+                if (bundle.Assets.ContainsPath(localPath)) return true;
+                if (bundle.Assets.ContainsPathPrefix(originalPath)) return true;
 
-            public override void Visit(IAsset asset)
-            {
-                if (Result) return;
-                if (IsMatch(asset.Path) || IsPartialAssetPathMatch(asset.Path))
-                {
-                    Result = true;
-                }
-            }
-
-            /// <summary>
-            /// Looking for "~/bundle/sub" can match "~/bundle/sub/asset.js"
-            /// </summary>
-            bool IsPartialAssetPathMatch(string assetPath)
-            {
-                if (assetPath.Length < originalPath.Length) return false;
-
-                return assetPath.StartsWith(originalPath, StringComparison.OrdinalIgnoreCase);
-            }
-
-            bool IsMatch(string path)
-            {
-                return PathUtilities.PathsEqual(path, localPath);
+                return false;
             }
         }
     }

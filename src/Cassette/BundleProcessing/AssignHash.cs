@@ -37,9 +37,7 @@ namespace Cassette.BundleProcessing
                 this.concatenatedStream = concatenatedStream;
             }
 
-            public void Visit(Bundle bundle)
-            {
-            }
+            public bool Visit(Bundle bundle) => true;
 
             public void Visit(IAsset asset)
             {

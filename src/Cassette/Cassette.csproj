@@ -92,7 +92,8 @@
       <Link>SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AssemblyScanner.cs" />
-    <Compile Include="AssetPathComparer.cs" />
+    <Compile Include="AssetCollection.cs" />
+    <Compile Include="AssetIndex.cs" />
     <Compile Include="BundleCacheRebuilder.cs" />
     <Compile Include="BundleCollectionChangedEventArgs.cs" />
     <Compile Include="BundleContainsPartialPathPredicate.cs" />
@@ -176,7 +177,6 @@
     <Compile Include="LocalAssetSettings.cs" />
     <Compile Include="FileAsset.cs" />
     <Compile Include="AssetBase.cs" />
-    <Compile Include="AssetFinder.cs" />
     <Compile Include="BundleFactoryBase.cs" />
     <Compile Include="FileSearch.cs" />
     <Compile Include="CassetteSettings.cs" />
@@ -306,6 +306,7 @@
     <Compile Include="Stylesheets\StylesheetBundleFactory.cs" />
     <Compile Include="UrlGenerator.cs" />
     <Compile Include="Utilities\ByteArrayExtensions.cs" />
+    <Compile Include="Utilities\CaseInsensitivePathEqualityComparer.cs" />
     <Compile Include="Utilities\DisposableLazy.cs" />
     <Compile Condition="'$(TargetFrameworkVersion)' == 'v3.5'" Include="Utilities\EnumT.cs" />
     <Compile Include="Utilities\HashedSets.cs" />

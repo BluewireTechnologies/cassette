@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using Cassette.IO;
+using Cassette.Utilities;
 
 #if NET35
 using Cassette.Utilities;
@@ -17,7 +18,7 @@ namespace Cassette.Stylesheets
             matchIndex = match.Index;
             matchLength = match.Length;
             path = match.Groups["path"].Value;
-            url = (path.StartsWith("/") ? "~" : "") + path + "." + match.Groups["extension"].Value;
+            url = (path.StartsWithCharacter('/') ? "~" : "") + path + "." + match.Groups["extension"].Value;
             extension = match.Groups["extension"].Value;
             var currentDirectory = rootDirectory.GetFile(asset.Path).Directory;
             file = currentDirectory.GetFile(url);

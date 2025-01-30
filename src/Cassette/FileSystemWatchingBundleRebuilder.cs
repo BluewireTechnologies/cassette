@@ -141,8 +141,7 @@ namespace Cassette
             try
             {
                 var predicate = BundleContainsPartialPathPredicate.CreateFor(path);
-                readOnlyBundles.Accept(predicate);
-                return predicate.Result;
+                return bundles.Any(predicate.EvaluateFor);
             }
             finally
             {

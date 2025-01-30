@@ -42,7 +42,7 @@ namespace Cassette.BundleProcessing
             );
         }
 
-        void IBundleVisitor.Visit(Bundle bundle)
+        bool IBundleVisitor.Visit(Bundle bundle)
         {
             currentBundle = bundle;
 
@@ -52,6 +52,7 @@ namespace Cassette.BundleProcessing
                 RecordUrlAsSeen(reference);
                 AddNewExternalBundle(reference);
             }
+            return true;
         }
 
         bool IsUrlReferenceNotYetSeen(string reference)

@@ -682,26 +682,19 @@ namespace Cassette
 
         public bool TryGetAssetByPath(string path, out IAsset asset, out Bundle bundle)
         {
-            var results =
-                from b in bundles
-                where b.ContainsPath(path)
-                let a = b.FindAssetByPath(path)
-                where a != null
-                select new { Bundle = b, Asset = a };
+            foreach (var b in bundles)
+            {
+                asset = b.FindAssetByPath(path);
+                if (asset != null)
+                {
+                    bundle = b;
+                    return true;
+                }
+            }
 
-            var result = results.FirstOrDefault();
-            if (result != null)
-            {
-                asset = result.Asset;
-                bundle = result.Bundle;
-                return true;
-            }
-            else
-            {
-                asset = null;
-                bundle = null;
-                return false;
-            }
+            asset = null;
+            bundle = null;
+            return false;
         }
 
         void TraceAssetFilePaths<T>(T bundle) where T : Bundle
@@ -719,8 +712,8 @@ namespace Cassette
 
         public IEnumerable<Bundle> FindBundlesContainingPath(string path)
         {
-            path = PathUtilities.AppRelative(path);
-            return bundles.Where(bundle => bundle.ContainsPath(path));
+            var appRelativePath = PathUtilities.AppRelative(path);
+            return bundles.Where(bundle => bundle.ContainsPath(appRelativePath));
         }
 
         internal void BuildReferences()

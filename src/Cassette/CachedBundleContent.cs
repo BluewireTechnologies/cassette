@@ -8,13 +8,13 @@ namespace Cassette
 {
     class CachedBundleContent : IAsset
     {
-        readonly IEnumerable<IAsset> originalAssets;
+        readonly AssetCollection originalAssets;
         readonly IFile file;
 
         public CachedBundleContent(IFile file, IEnumerable<IAsset> originalAssets)
         {
             this.file = file;
-            this.originalAssets = originalAssets.ToArray();
+            this.originalAssets = new AssetCollection(originalAssets);
         }
 
         public IEnumerable<IAsset> OriginalAssets
