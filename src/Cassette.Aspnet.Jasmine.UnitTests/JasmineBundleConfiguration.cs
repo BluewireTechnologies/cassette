@@ -34,6 +34,13 @@ namespace Cassette.Aspnet.Jasmine
         {
             bundles.Get<StylesheetBundle>("cassette.aspnet.jasmine").ShouldNotBeNull();
         }
+
+        [Fact]
+        public void ThenBundleContentCanBeGenerated()
+        {
+            bundles.Get<ScriptBundle>("cassette.aspnet.jasmine").ConcatenateAssets("");
+            bundles.Get<StylesheetBundle>("cassette.aspnet.jasmine").ConcatenateAssets("");
+        }
     }
 }
 #endif
