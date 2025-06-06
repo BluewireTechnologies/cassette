@@ -80,12 +80,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="jasmine.css" />
-    <EmbeddedResource Include="jasmine.js" />
     <None Include="Cassette.Aspnet.Jasmine.symbols.nutrans">
       <SubType>Designer</SubType>
     </None>
-    <None Include="jasmine-license.txt" />
+    <EmbeddedResource Include="jasmine_5_7_1\jasmine-license.txt" />
     <None Include="Cassette.Aspnet.Jasmine.nutrans">
       <SubType>Designer</SubType>
     </None>
@@ -118,6 +116,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="help.htm" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="jasmine_5_7_1\boot0.js" />
+    <EmbeddedResource Include="jasmine_5_7_1\boot1.js" />
+    <EmbeddedResource Include="jasmine_5_7_1\jasmine-html.js" />
+    <EmbeddedResource Include="jasmine_5_7_1\jasmine.css" />
+    <EmbeddedResource Include="jasmine_5_7_1\jasmine.js" />
+    <EmbeddedResource Include="jasmine_5_7_1\jasmine_favicon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

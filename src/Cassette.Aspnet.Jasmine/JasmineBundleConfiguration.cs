@@ -28,14 +28,17 @@ namespace Cassette.Aspnet.Jasmine
         ScriptBundle CreateScriptBundle()
         {
             var script = scriptBundleFactory.CreateBundle("cassette.aspnet.jasmine", Enumerable.Empty<IFile>(), new BundleDescriptor());
-            script.Assets.Add(new ResourceAsset("Cassette.Aspnet.Jasmine.jasmine.js", GetType().Assembly));
+            script.Assets.Add(new ResourceAsset("Cassette.Aspnet.Jasmine.jasmine_5_7_1.jasmine.js", GetType().Assembly));
+            script.Assets.Add(new ResourceAsset("Cassette.Aspnet.Jasmine.jasmine_5_7_1.jasmine-html.js", GetType().Assembly));
+            script.Assets.Add(new ResourceAsset("Cassette.Aspnet.Jasmine.jasmine_5_7_1.boot0.js", GetType().Assembly));
+            script.Assets.Add(new ResourceAsset("Cassette.Aspnet.Jasmine.jasmine_5_7_1.boot1.js", GetType().Assembly));
             return script;
         }
 
         StylesheetBundle CreateStylesheetBundle()
         {
             var css = stylesheetBundleFactory.CreateBundle("cassette.aspnet.jasmine", Enumerable.Empty<IFile>(), new BundleDescriptor());
-            css.Assets.Add(new ResourceAsset("Cassette.Aspnet.Jasmine.jasmine.css", GetType().Assembly));
+            css.Assets.Add(new ResourceAsset("Cassette.Aspnet.Jasmine.jasmine_5_7_1.jasmine.css", GetType().Assembly));
             return css;
         }
     }
